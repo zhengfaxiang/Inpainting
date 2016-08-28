@@ -27,7 +27,7 @@ def inpaint_array(inputArray, mask, **kwargs):
 
 def test():
     mask = np.zeros((41, 41))
-    mask[16:21, 18:21] = 1
+    mask[16:20, 18:20] = 1
     inputArray = inpaint.makeGaussian(41, 25)/np.max(
         inpaint.makeGaussian(41, 8))
 
