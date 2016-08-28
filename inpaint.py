@@ -82,14 +82,16 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
     # depending on kernel type, fill kernel array
     if method == 'localmean':
 
-        print('kernel_size', kernel_size)
+        print('Using localmean method ...')
         for i in range(kernel_size):
             for j in range(kernel_size):
                 kernel[i, j] = 1
         print('kernel:')
         print(kernel)
+        print('kernel shape:', kernel.shape)
 
     elif method == 'idw':
+        print('Using idw method ...')
         kernel = makeGaussian(kernel_size, kernel_sigma)
         print('kernel:')
         print(kernel)
