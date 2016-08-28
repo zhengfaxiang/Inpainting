@@ -16,23 +16,47 @@ import inpaint
 import matplotlib.pyplot as plt
 
 
-def inpaint_array(inputArray, mask):
+def inpaint_array(inputArray, mask, **kwargs):
     maskedImg = np.ma.array(inputArray, mask=mask)
     NANMask = maskedImg.filled(np.NaN)
     badArrays, num_badArrays = ndimage.label(mask)
-    data_slices = ndimage.find_objects(badArrays)
-    filled = inpaint.replace_nans(NANMask, max_iter=20, tol=0.05,
-                                  kernel_radius=5, kernel_sigma=2,
-                                  method='idw')
+    # data_slices = ndimage.find_objects(badArrays)
+    filled = inpaint.replace_nans(NANMask, **kwargs)
     return filled
 
 
 def test():
-    mask = np.zeros((40, 40))
-    mask[15:21, 18:21] = 1
-    inputArray = inpaint.makeGaussian(40, 25)/np.max(
-        inpaint.makeGaussian(40, 8))
-    d = inpaint_array(inputArray, mask)
-    c = plt.imshow(d, interpolation="None", cmap=plt.cm.cubehelix)
+    mask = np.zeros((41, 41))
+    mask[16:21, 18:21] = 1
+    inputArray = inpaint.makeGaussian(41, 25)/np.max(
+        inpaint.makeGaussian(41, 8))
+
+    fig1 = plt.figure(figsize=(8, 6))
+    fig1.add_subplot(111)
+    c = plt.imshow(inputArray * (1 - mask), interpolation='None',
+                   cmap=plt.cm.cubehelix)
+    plt.title("Bad Array")
     plt.colorbar(c)
-    plt.savefig('healed_iwd.png')
+
+    fig2 = plt.figure(figsize=(8, 6))
+    fig2.add_subplot(111)
+    d = inpaint_array(inputArray, mask, max_iter=20, tol=0.05,
+                      kernel_radius=5, kernel_sigma=2,
+                      method='idw')
+    c = plt.imshow(d, interpolation="None", cmap=plt.cm.cubehelix)
+    plt.title("Healed Array Using IDW")
+    plt.colorbar(c)
+
+    fig3 = plt.figure(figsize=(8, 6))
+    fig3.add_subplot(111)
+    d = inpaint_array(inputArray, mask, max_iter=20, tol=0.05,
+                      kernel_radius=5, method='localmean')
+    c = plt.imshow(d, interpolation="None", cmap=plt.cm.cubehelix)
+    plt.title("Healed Array Using Localmean")
+    plt.colorbar(c)
+
+    plt.show()
+
+
+if __name__ == '__main__':
+    test()
