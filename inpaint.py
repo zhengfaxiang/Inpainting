@@ -50,8 +50,9 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
     max_iter : int
         the number of iterations
 
-    kernel_size : int
-        the size of the kernel, default is 1
+    kernel_radius : int
+        the radius of the kernel, default is 2. And the default size of
+        kernel will be (2 * kernel_radius + 1)
 
     method : str
         the method used to replace invalid values. Valid options are
