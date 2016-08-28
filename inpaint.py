@@ -66,7 +66,7 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
     """
     kernel_size = kernel_radius*2+1
     filled = np.empty([array.shape[0], array.shape[1]])
-    kernel = np.empty((2*kernel_size+1, 2*kernel_size+1))
+    kernel = np.empty([kernel_size, kernel_size])
 
     # indices where array is NaN
     inans, jnans = np.nonzero(np.isnan(array))
