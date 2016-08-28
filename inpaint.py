@@ -28,29 +28,41 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
                  method='idw'):
     """Replace NaN elements in an array using an iterative image inpainting
     algorithm.
+
     The algorithm is the following:
+
     1) For each element in the input array, replace it by a weighted average
-    of the neighbouring elements which are not NaN themselves. The weights
-    depends of the method type. If ``method=localmean`` weight are equal to
-    1/( (2*kernel_size+1)**2 -1 )
+       of the neighbouring elements which are not NaN themselves. The weights
+       depends of the method type. If ``method=localmean`` weight are equal to
+       1 / ((2 * kernel_size + 1) ** 2 -1)
+
     2) Several iterations are needed if there are adjacent NaN elements.
-    If this is the case, information is "spread" from the edges of the missing
-    regions iteratively, until the variation is below a certain threshold.
+       If this is the case, information is "spread" from the edges of the
+       missing regions iteratively, until the variation is below a certain
+       threshold.
+
     Parameters
     ----------
+
     array : 2d np.ndarray
-    an array containing NaN elements that have to be replaced
+        an array containing NaN elements that have to be replaced
+
     max_iter : int
-    the number of iterations
+        the number of iterations
+
     kernel_size : int
-    the size of the kernel, default is 1
+        the size of the kernel, default is 1
+
     method : str
-    the method used to replace invalid values. Valid options are
-    `localmean`, 'idw'.
+        the method used to replace invalid values. Valid options are
+        `localmean`, 'idw'.
+
     Returns
     -------
+
     filled : 2d np.ndarray
-    a copy of the input array, where NaN elements have been replaced.
+        a copy of the input array, where NaN elements have been replaced.
+
     """
     kernel_size = kernel_radius*2+1
     filled = np.empty([array.shape[0], array.shape[1]])
@@ -73,13 +85,17 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
         for i in range(kernel_size):
             for j in range(kernel_size):
                 kernel[i, j] = 1
-                print(kernel, 'kernel')
+        print('kernel:')
+        print(kernel)
 
     elif method == 'idw':
         kernel = makeGaussian(kernel_size, kernel_sigma)
-        print(kernel.shape, 'kernel')
+        print('kernel:')
+        print(kernel)
+        print('kernel shape:', kernel.shape)
     else:
-        raise ValueError('method not valid.')
+        raise ValueError('method not valid. Should be one of ' +
+                         '`localmean` or `idw`.')
 
     # fill new array with input elements
     for i in range(array.shape[0]):
@@ -135,7 +151,7 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
 
         # check if mean square difference between values of replaced
         # elements is below a certain tolerance
-        print('tolerance', np.mean((replaced_new-replaced_old)**2))
+        print('tolerance:', np.mean((replaced_new-replaced_old)**2))
         if np.mean((replaced_new-replaced_old)**2) < tol:
             break
         else:
