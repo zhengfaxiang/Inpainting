@@ -50,9 +50,17 @@ def replace_nans(array, max_iter=50, tol=0.05, kernel_radius=2, kernel_sigma=2,
     max_iter : int
         the number of iterations
 
+    tol : float
+        On each iteration check if the mean square difference between
+        values of replaced elements is below a certain tolerance `tol`
+
     kernel_radius : int
         the radius of the kernel, default is 2. And the default size of
         kernel will be (2 * kernel_radius + 1)
+
+    kernel_sigma : float
+        Sigma if the Gaussian kernel. The convariance matrix will be
+        diag(kernel_sigma, kernel_sigma, ..., kernel_sigma)
 
     method : str
         the method used to replace invalid values. Valid options are
