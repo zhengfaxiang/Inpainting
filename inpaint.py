@@ -19,7 +19,7 @@ def makeGaussian(size, sigma):
     pos = np.empty(x.shape + (2,))
     pos[:, :, 0] = x
     pos[:, :, 1] = y
-    rv = multivariate_normal(mean=[size/2, size/2],
+    rv = multivariate_normal(mean=[(size-1)/2, (size-1)/2],
                              cov=[[sigma, 0], [0, sigma]])
     return rv.pdf(pos)/np.sum(rv.pdf(pos))
 
